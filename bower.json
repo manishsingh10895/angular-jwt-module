@@ -1,0 +1,30 @@
+{
+  "name": "angular-jwt-module",
+  "description": "JWT authorization for Angular js",
+  "main": "index.js",
+  "authors": [
+    "Manish Singh"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "jwt",
+    "angular",
+    "api",
+    "token",
+    "authentication",
+    "token-authentication",
+    "token-based"
+  ],
+  "homepage": "https://github.com/s-mash/angular-jwt-module",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "^1.5.6",
+    "angularLocalStorage": "ngStorage#^0.3.2"
+  }
+}
