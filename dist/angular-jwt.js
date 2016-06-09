@@ -40,7 +40,7 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
     }
 
     function DecodeToken(token) {
-        var tokenParts = token.split(' ');
+        var tokenParts = token.split('.');
         if(tokenParts.length !== 3) { //jwt token has 3 parts 
             throw new Error("Token is invalid, A valid token has three parts");
         }
@@ -56,6 +56,7 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
     function retrieveClaimsFromToken() {
         var token = $localStorage.token;
         var user = {};
+        
         if(typeof token !== 'undefined') {  //check is the token is present
             var user = DecodeToken(token);
             return user;
@@ -80,7 +81,9 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
             });
     }
 
-    this.getTokenClaims = retrieveClaimsFromToken(); 
+    this.getTokenClaims = function() {
+        return retrieveClaimsFromToken();
+    } 
 
     //Signing up
     this.signup = function(data, onSuccess, onError) {
