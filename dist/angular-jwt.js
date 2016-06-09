@@ -2,18 +2,18 @@ var app = angular.module('angular-jwt', ['ngStorage']);
 
 //Service for auth
 app.config(function($httpProvider,jwtAuthProvider) {
-    $httpProvider.interceptors.push(function($q, $state, $storage) { //intercepting http request before processing and response after processing 
+    $httpProvider.interceptors.push(function($q, $localStorage) { //intercepting http request before processing and response after processing 
         return {
-            'request': function(config) { //intecepting http request and set the jwt-auth header if available
-                config.headers = config.headers || {};
+            'request': function(jwtAuth) { //intecepting http request and set the jwt-auth header if available
+                jwtAuth.headers = jwtAuth.headers || {};
                 if($localStorage.token) {
-                    config.headers.Authorization = "Bearer " + $localStorage.token;
+                    jwtAuth.headers.Authorization = "Bearer " + $localStorage.token;
                 }
-                return config;
+                return jwtAuth;
             },
             'responseError': function(response) {
                 if(response.status == 401 || response.status == 400) {
-                    $state.go(jwtAuthProvider.getProperty('loginState')); // go to login state after any error
+                    // $state.go(jwtAuthProvider.getProperty('loginState')); // go to login state after any error
                 }
 
                 return $q.reject(response); //reject promise on error
@@ -23,7 +23,7 @@ app.config(function($httpProvider,jwtAuthProvider) {
 });
 
 
-app.service('jwtAuthService', function jwtAuthService(config, $localStorage, $state) {
+app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $state, $http) {
 
     //Decoding token payload
      function urlBase64Decode(str) {
@@ -68,7 +68,8 @@ app.service('jwtAuthService', function jwtAuthService(config, $localStorage, $st
 
     //Signing In onSuccess and onError callbacks defined by the user in a controller
     this.login = function(data, onSuccess, onError) {
-        $http.post(config.baseApiUrl+config.loginRoute, data)
+        console.log(jwtAuth.baseApiUrl);
+        $http.post(jwtAuth.baseApiUrl+jwtAuth.signinRoute, data)
             .then(function(response) {
                 if(onSuccess) {
                     onSuccess(response);
@@ -89,7 +90,7 @@ app.service('jwtAuthService', function jwtAuthService(config, $localStorage, $st
     //Signing up
     this.signup = function(data, onSuccess, onError) {
 
-        $http.post(config.baseApiUrl + config.signupRoute, data)
+        $http.post(jwtAuth.baseApiUrl + jwtAuth.signupRoute, data)
             .then(function(response) {
                 if(onSuccess) {
                     onSuccess(response);
@@ -106,19 +107,13 @@ app.service('jwtAuthService', function jwtAuthService(config, $localStorage, $st
     }
 })
 
-app.provider('jwtAuth', function jwtAuthServiceProvider() {
-    this.baseUrl = '/';
+app.provider('jwtAuth', function ProviderJwtAuth() {
     this.baseUrl = '/api';
-    //Frontend Angular UI States
     this.homeState = 'home';
     this.loginState = 'login';
     this.signupState = 'signup';
+    this.signinState = 'signin';
 
-    //Backend Routes
-    this.homeRoute = this.baseApiUrl + '/home';
-    this.loginRoute = this.baseApiUrl + '/login';
-    this.signupRoute = this.baseApiUrl + '/signup';
-    
     self = this;
 
     this.setBaseUrl = function(baseUrl) {
@@ -135,12 +130,13 @@ app.provider('jwtAuth', function jwtAuthServiceProvider() {
 
     this.initializeAuthservice = function (args) {
         self.baseApiUrl = args.baseApiUrl;
+        self.signinState = args.signinState;
         self.loginState = args.loginState;
         self.homeState = args.homeState;
         self.signupState = args.signupState;
     };
 
     this.$get = function() {
-        return new jwtAuthService(self);
+        return self;
     }
 });
