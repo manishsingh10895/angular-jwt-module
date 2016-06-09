@@ -64,7 +64,7 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
 
     //Signing In onSuccess and onError callbacks defined by the user in a controller
     this.login = function(data, onSuccess, onError) {
-        $http.post(jwtAuth.baseApiUrl+jwtAuth.signinRoute, data)
+        $http.post(jwtAuth.baseApiUrl+jwtAuth.loginRoute, data)
             .then(function(response) {
                 if(onSuccess) {
                     $localStorage.token = response.data.token;
@@ -104,10 +104,8 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
 
 app.provider('jwtAuth', function ProviderJwtAuth() {
     this.baseUrl = '/api';
-    this.homeState = 'home';
-    this.loginState = 'login';
-    this.signupState = 'signup';
-    this.signinState = 'signin';
+    this.loginRoute = '/login';
+    this.signupRoute = '/signup';
 
     self = this;
 
@@ -125,10 +123,8 @@ app.provider('jwtAuth', function ProviderJwtAuth() {
 
     this.initializeAuthservice = function (args) {
         self.baseApiUrl = args.baseApiUrl;
-        self.signinState = args.signinState;
-        self.loginState = args.loginState;
-        self.homeState = args.homeState;
-        self.signupState = args.signupState;
+        self.signupRoute = args.signupRoute;
+        self.loginRoute = args.loginRoute;
     };
 
     this.$get = function() {
