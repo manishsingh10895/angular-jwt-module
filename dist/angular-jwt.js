@@ -117,7 +117,7 @@ app.provider('jwtAuth', function ProviderJwtAuth() {
         return this[propertyName];
     };
 
-    this.initializeAuthservice = function (args) {
+    this.initializeAuthService = function (args) {
         self.baseApiUrl = args.baseApiUrl;
         self.signupRoute = args.signupRoute;
         self.loginRoute = args.loginRoute;
