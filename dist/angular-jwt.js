@@ -6,17 +6,12 @@ app.config(function($httpProvider,jwtAuthProvider) {
         return {
             'request': function(jwtAuth) { //intecepting http request and set the jwt-auth header if available
                 jwtAuth.headers = jwtAuth.headers || {};
-                console.log($localStorage.token);
                 if($localStorage.token) {
                     jwtAuth.headers.Authorization = "Bearer " + $localStorage.token;
                 }
                 return jwtAuth;
             },
             'responseError': function(response) {
-                if(response.status == 401 || response.status == 400) {
-                    // $state.go(jwtAuthProvider.getProperty('loginState')); // go to login state after any error
-                }
-
                 return $q.reject(response); //reject promise on error
             }
         }
@@ -24,7 +19,7 @@ app.config(function($httpProvider,jwtAuthProvider) {
 });
 
 
-app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $state, $http) {
+app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $http) {
 
     //Decoding token payload
      function urlBase64Decode(str) {
@@ -69,7 +64,6 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $s
 
     //Signing In onSuccess and onError callbacks defined by the user in a controller
     this.login = function(data, onSuccess, onError) {
-        console.log(jwtAuth.baseApiUrl);
         $http.post(jwtAuth.baseApiUrl+jwtAuth.signinRoute, data)
             .then(function(response) {
                 if(onSuccess) {
@@ -77,7 +71,6 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $s
                     onSuccess(response);
                 } else {
                     $localStorage.token = response.data.token;
-                    $state.go('home');
                 }
             },
             function(error) {
@@ -96,11 +89,9 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $s
             .then(function(response) {
                 if(onSuccess) {
                     $localStorage.token = response.data.token;
-                    console.log($localStorage.token);
                     onSuccess(response);
                 } else {
                     $localStorage.token = response.data.token;
-                    $state.go('home');
                 }
             },
             function(error) {
