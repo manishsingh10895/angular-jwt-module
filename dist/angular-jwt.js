@@ -6,6 +6,7 @@ app.config(function($httpProvider,jwtAuthProvider) {
         return {
             'request': function(jwtAuth) { //intecepting http request and set the jwt-auth header if available
                 jwtAuth.headers = jwtAuth.headers || {};
+                console.log($localStorage.token);
                 if($localStorage.token) {
                     jwtAuth.headers.Authorization = "Bearer " + $localStorage.token;
                 }
@@ -72,9 +73,10 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $s
         $http.post(jwtAuth.baseApiUrl+jwtAuth.signinRoute, data)
             .then(function(response) {
                 if(onSuccess) {
+                    $localStorage.token = response.data.token;
                     onSuccess(response);
                 } else {
-                    $localStorage.token = response.token;
+                    $localStorage.token = response.data.token;
                     $state.go('home');
                 }
             },
@@ -93,9 +95,11 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $s
         $http.post(jwtAuth.baseApiUrl + jwtAuth.signupRoute, data)
             .then(function(response) {
                 if(onSuccess) {
+                    $localStorage.token = response.data.token;
+                    console.log($localStorage.token);
                     onSuccess(response);
                 } else {
-                    $localStorage.token = response.token;
+                    $localStorage.token = response.data.token;
                     $state.go('home');
                 }
             },
