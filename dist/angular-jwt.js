@@ -103,15 +103,11 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
 })
 
 app.provider('jwtAuth', function ProviderJwtAuth() {
-    this.baseUrl = '/api';
+    this.baseApiUrl = '/api';
     this.loginRoute = '/login';
     this.signupRoute = '/signup';
 
     self = this;
-
-    this.setBaseUrl = function(baseUrl) {
-        this.baseUrl = baseUrl;
-    }
 
     this.setBaseApiUrl = function(baseApiUrl) {
         this.baseApiUrl = baseApiUrl;
