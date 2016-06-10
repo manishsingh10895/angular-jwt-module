@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/s-mash/angular-jwt-module#readme",
   "dependencies": {
+    "gulp": "^3.9.1",
     "jsonwebtoken": "^7.0.0"
   },
   "devDependencies": {
