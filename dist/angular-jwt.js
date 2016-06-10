@@ -103,6 +103,15 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
                 }
             });
     }
+
+    this.logout = function(onSuccess, onError) {
+        if($localStorage.token) {
+            delete $localStorage.token;
+            onSuccess("Logged Out");
+        } else {
+            onError("No JWT Token was found");
+        }
+    };
 })
 
 app.provider('jwtAuth', function ProviderJwtAuth() {
