@@ -69,14 +69,15 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
             .then(function(response) {
                 if(onSuccess) {
                     $localStorage.token = response.data.token;
-                    onSuccess(response);
+                    onSuccess(response.data);
                 } else {
                     $localStorage.token = response.data.token;
                 }
             },
             function(error) {
+                console.log(error);
                 if(onError) {
-                    onError(error);
+                    onError(error.data);
                 }
             });
     }
@@ -85,6 +86,7 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
         return retrieveClaimsFromToken();
     } 
 
+    this.IsUserLoggedIn = $localStorage.token ? true : false;
     //Signing up
     this.signup = function(data, onSuccess, onError) {
 
