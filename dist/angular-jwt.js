@@ -86,10 +86,11 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
         return retrieveClaimsFromToken();
     } 
 
-    this.IsUserLoggedIn = $localStorage.token ? true : false;
+    this.IsUserLoggedIn = function() {
+        return $localStorage.token ? true : false;
+    }
     //Signing up
     this.signup = function(data, onSuccess, onError) {
-
         $http.post(jwtAuth.baseApiUrl + jwtAuth.signupRoute, data)
             .then(function(response) {
                 if(onSuccess) {
