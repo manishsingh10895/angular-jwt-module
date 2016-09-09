@@ -10,3 +10,5 @@ gulp.task('minify', function() {
         }))
         .pipe(gulp.dest('dist'));
 });
+
+gulp.task('default', ['minify']);

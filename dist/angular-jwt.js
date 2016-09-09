@@ -49,7 +49,7 @@ app.service('jwtAuthService', function jwtAuthService(jwtAuth, $localStorage, $h
             throw new Error("Token not decoded");
         }
 
-        return JSON.parse(decodedToken);
+        return (decodedToken); //make it JSON.parse(decodedToken) if it doesn't work'
     }
 
     //retrieve claims(user) from returned token if available
